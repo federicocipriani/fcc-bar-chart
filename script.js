@@ -22,6 +22,7 @@ fetch(
         var gdp_min = d3.min(gdp);
         var gdp_max = d3.max(gdp);
 
+        console.log(gdp_max);
         // Scaling the domain to the dimensions of the canvas
         const xScale = d3
             .scaleTime()
@@ -32,6 +33,8 @@ fetch(
             .domain([0, gdp_max])
             .range([h - padding, padding]);
 
+        console.log(gdp_max);
+        console.log(yScale(gdp_max));
         // Add axes
         const xAxis = d3.axisBottom(xScale);
         const yAxis = d3.axisLeft(yScale);
@@ -45,12 +48,13 @@ fetch(
             .attr('transform', 'translate(' + padding + ',0)')
             .call(yAxis);
 
+        // Render the columns
         d3.select('svg')
             .selectAll('rect')
             .data(dataset.data)
             .enter()
             .append('rect')
-            .attr('x', (d, i) => xScale(i * binLenght))
+            .attr('x', (d, i) => padding + xScale(i * binLenght))
             .attr('y', (d, i) => h - padding - yScale(d[1]))
             .attr('width', binLenght)
             .attr('height', (d) => yScale(d[1]))
