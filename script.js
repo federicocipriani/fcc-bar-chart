@@ -109,7 +109,11 @@ fetch(
         function handleMouseover(d, i) {
             d3.select(this).attr('opacity', '0.5');
             d3.select('#tooltip')
+                .transition()
+                .duration(0)
                 .style('opacity', '1')
+                .style('bottom', '10rem')
+                .style('left', `${margins.left + padding + i * 2}px`)
                 .attr('data-date', dates[i])
                 .append('text')
                 .attr('id', 'tooltip-text')
@@ -117,7 +121,10 @@ fetch(
         }
         function handleMouseout(d, i) {
             d3.select(this).attr('opacity', '1');
-            d3.select('#tooltip').style('opacity', '0');
+            d3.select('#tooltip')
+                .transition()
+                .duration(100)
+                .style('opacity', '0');
             d3.select('#tooltip-text').remove();
         }
     });
