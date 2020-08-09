@@ -107,18 +107,13 @@ fetch(
 
         // Functions
         function handleMouseover(d, i) {
-            console.log(d, i);
-            // d3.select(this).attr('opacity', '1');
+            d3.select(this).attr('opacity', '0.5');
             d3.select('#tooltip')
                 .style('opacity', '1')
-                .attr('data-date', (d, i) => {
-                    console.log(d);
-                    console.log(i);
-                    dates[i];
-                })
+                .attr('data-date', dates[i])
                 .append('text')
                 .attr('id', 'tooltip-text')
-                .text(d);
+                .text(d + dates[i]);
         }
         function handleMouseout(d, i) {
             d3.select(this).attr('opacity', '1');
