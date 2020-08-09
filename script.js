@@ -7,6 +7,10 @@ const svg = d3
     .select('svg')
     .attr('width', w + (margins.right + margins.left))
     .attr('height', h + (margins.top + margins.bottom));
+d3.select('.container')
+    .append('div')
+    .attr('id', 'tooltip')
+    .style('opacity', '0');
 
 fetch(
     'https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json'
@@ -63,7 +67,8 @@ fetch(
             .attr('data-date', (d, i) => dates[i])
             .attr('data-gdp', (d, i) => gdp[i])
             .attr('class', 'bar')
-            .on('mouseover', (d) => console.log(d));
+            .on('mouseover', handleMouseover)
+            .on('mouseout', handleMouseout);
 
         // Add axes
         var xAxis = d3.axisBottom(xScale).tickPadding(8);
@@ -88,6 +93,8 @@ fetch(
             .attr('id', 'y-axis-grid')
             .attr('transform', 'translate(' + margins.left + ',0)')
             .call(yAxisGrid);
+
+        // Add axes labels
         svg.append('text')
             .text('Gross Domestic Product (GDP)')
             .attr('transform', 'rotate(-90)')
@@ -97,4 +104,25 @@ fetch(
             .text('Years')
             .attr('x', margins.left + w / 2.1)
             .attr('y', h + 1.9 * margins.top);
+
+        // Functions
+        function handleMouseover(d, i) {
+            console.log(d, i);
+            // d3.select(this).attr('opacity', '1');
+            d3.select('#tooltip')
+                .style('opacity', '1')
+                .attr('data-date', (d, i) => {
+                    console.log(d);
+                    console.log(i);
+                    dates[i];
+                })
+                .append('text')
+                .attr('id', 'tooltip-text')
+                .text(d);
+        }
+        function handleMouseout(d, i) {
+            d3.select(this).attr('opacity', '1');
+            d3.select('#tooltip').style('opacity', '0');
+            d3.select('#tooltip-text').remove();
+        }
     });

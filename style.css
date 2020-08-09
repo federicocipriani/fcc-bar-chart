@@ -16,6 +16,7 @@ body {
 }
 
 .container {
+    position: relative;
     background-color: white;
     display: flex;
     flex-direction: column;
@@ -36,4 +37,12 @@ body {
 
 g {
     font-family: 'Oswald', sans-serif;
+}
+
+#tooltip {
+    position: absolute;
+    background-color: red;
+    height: 4rem;
+    width: 6rem;
+    border-radius: 0.5rem;
 }
