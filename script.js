@@ -1,7 +1,6 @@
 const w = 740;
 const h = 400;
 var margins = { right: 40, left: 80, top: 50, bottom: 50 };
-const padding = 80;
 
 const svg = d3
     .select('svg')
@@ -39,9 +38,6 @@ fetch(
         var date_max_limit = new Date(date_max);
         date_max_limit.setMonth(date_max_limit.getMonth() + 3);
 
-        // var newdate = date_max.setMonth(date_max.getMonth() + 3);
-        // console.log(newdate);
-
         // Scaling the domain to the dimensions of the canvas
         var xScale = d3
             .scaleTime()
@@ -63,7 +59,7 @@ fetch(
             .attr('y', (d) => yScale(d))
             .attr('width', binLenght)
             .attr('height', (d) => h + margins.top - yScale(d))
-            .attr('fill', 'teal')
+            .attr('fill', '#086972')
             .attr('data-date', (d, i) => dates[i])
             .attr('data-gdp', (d, i) => gdp[i])
             .attr('class', 'bar')
@@ -105,25 +101,45 @@ fetch(
             .attr('x', margins.left + w / 2.1)
             .attr('y', h + 1.9 * margins.top);
 
+        // Calculate quarters
+        var quarters = datesFormat.map((d) =>
+            d.getMonth() === 0
+                ? 'Q4'
+                : d.getMonth() === 3
+                ? 'Q1'
+                : d.getMonth() === 6
+                ? 'Q2'
+                : d.getMonth() === 9
+                ? 'Q3'
+                : ''
+        );
+        var years = datesFormat.map((d) => d.getFullYear());
+
         // Functions
         function handleMouseover(d, i) {
+            let textbox = '';
             d3.select(this).attr('opacity', '0.5');
             d3.select('#tooltip')
                 .transition()
                 .duration(0)
-                .style('opacity', '1')
-                .style('bottom', '10rem')
-                .style('left', `${margins.left + padding + i * 2}px`)
-                .attr('data-date', dates[i])
-                .append('text')
-                .attr('id', 'tooltip-text')
-                .text(d + dates[i]);
+                .style('opacity', '0.7')
+                .style('bottom', '15rem')
+                .style('left', `${margins.left * 2 + i * 2}px`)
+                .attr('data-date', dates[i]);
+            d3.select('#tooltip').html(
+                quarters[i] +
+                    ' ' +
+                    years[i] +
+                    '<br /><strong>GDP = ' +
+                    d.toFixed(1) +
+                    '</strong>'
+            );
         }
         function handleMouseout(d, i) {
             d3.select(this).attr('opacity', '1');
             d3.select('#tooltip')
                 .transition()
-                .duration(100)
+                .duration(300)
                 .style('opacity', '0');
             d3.select('#tooltip-text').remove();
         }

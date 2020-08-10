@@ -23,10 +23,10 @@ body {
     align-items: center;
     padding: 3rem;
     border-radius: 1rem;
+    box-shadow: 4px 4px 10px 5px #dfdfdf;
 }
 
 #title {
-    /* padding-bottom: 1rem; */
     font-size: 2.5rem;
 }
 
@@ -41,8 +41,11 @@ g {
 
 #tooltip {
     position: absolute;
-    background-color: red;
-    height: 4rem;
-    width: 6rem;
+    background-color: white;
+    border: 0.05rem solid black;
+    min-height: 4rem;
+    min-width: 6rem;
+    padding: 0.5rem;
     border-radius: 0.5rem;
+    text-align: center;
 }
