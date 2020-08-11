@@ -47,9 +47,9 @@ g {
     background-color: white;
     border: 0.05rem solid black;
     max-height: 10rem;
-    max-width: 30%;
+    max-width: 35%;
     padding: 1rem;
-    font-size: 2rem;
+    font-size: 1.75rem;
     border-radius: 0.5rem;
     text-align: center;
 }
