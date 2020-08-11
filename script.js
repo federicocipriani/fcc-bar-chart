@@ -1,13 +1,14 @@
-const w = 740;
-const h = 400;
-// const w = 340;
-// const h = 600;
-var margins = { right: 40, left: 80, top: 50, bottom: 50 };
+var margins = { right: 30, left: 80, top: 50, bottom: 50 };
+const canvasW = 900;
+const canvasH = 600;
+const svgW = canvasW - margins.left - margins.right;
+const svgH = canvasH - margins.top - margins.left;
 
-const svg = d3
-    .select('svg')
-    .attr('width', w + (margins.right + margins.left))
-    .attr('height', h + (margins.top + margins.bottom));
+const svg = d3.select('svg').attr('viewBox', `0 0 ${canvasW} ${canvasH}`);
+const chart = svg
+    .append('g')
+    .attr('class', 'chart_area')
+    .attr('transform', `translate(${margins.left},${margins.top})`);
 d3.select('.container')
     .append('div')
     .attr('id', 'tooltip')
@@ -18,41 +19,49 @@ fetch(
 )
     .then((response) => response.json())
     .then((dataset) => {
-        var binLenght = w / dataset.data.length;
+        var binLenght = svgW / dataset.data.length;
 
+        // ---------------------------------------------------------
         // Arrays containing the x and y axis data
         const dates = dataset.data.map((item) => item[0]);
         const datesFormat = dates.map((item) => new Date(item));
         var gdp = dataset.data.map((item) => item[1]);
 
+        // ---------------------------------------------------------
         // Get min and max values
         var date_min = d3.min(datesFormat);
         var date_max = d3.max(datesFormat);
         var gdp_min = d3.min(gdp);
         var gdp_max = d3.max(gdp);
 
+        // ---------------------------------------------------------
         // Adjust max GDP value to get a better graph
         if (gdp_max % 2000 !== 0) {
             gdp_max = gdp_max - (gdp_max % 2000) + 2000;
         }
 
+        // ---------------------------------------------------------
         // Adjust latest date to get a better graph
         var date_max_limit = new Date(date_max);
         date_max_limit.setMonth(date_max_limit.getMonth() + 3);
 
+        // ---------------------------------------------------------
         // Scaling the domain to the dimensions of the canvas
         var xScale = d3
             .scaleTime()
             .domain([date_min, date_max_limit])
-            .range([margins.left, w + margins.left]);
+            .range([0, svgW]);
+        // .range([margins.left, w + margins.left]);
 
-        var yScale = d3
-            .scaleLinear()
-            .domain([0, gdp_max])
-            .range([h + margins.top, margins.top]);
+        console.log(xScale(date_min));
+        console.log(xScale(date_max));
 
+        var yScale = d3.scaleLinear().domain([0, gdp_max]).range([svgH, 0]);
+        // .range([h + margins.top, margins.top]);
+
+        // ---------------------------------------------------------
         // Render the columns
-        d3.select('svg')
+        chart
             .selectAll('rect')
             .data(gdp)
             .enter()
@@ -60,7 +69,7 @@ fetch(
             .attr('x', (d, i) => xScale(datesFormat[i]))
             .attr('y', (d) => yScale(d))
             .attr('width', binLenght)
-            .attr('height', (d) => h + margins.top - yScale(d))
+            .attr('height', (d) => svgH - yScale(d))
             .attr('fill', '#01a9b4')
             .attr('data-date', (d, i) => dates[i])
             .attr('data-gdp', (d, i) => gdp[i])
@@ -68,41 +77,48 @@ fetch(
             .on('mouseover', handleMouseover)
             .on('mouseout', handleMouseout);
 
+        // ---------------------------------------------------------
         // Add axes
         var xAxis = d3.axisBottom(xScale).tickPadding(8);
         var yAxis = d3.axisLeft(yScale);
 
-        var xAxisGrid = d3.axisTop(xScale).tickFormat('').ticks(0).tickSize(-h);
-        var yAxisGrid = d3.axisLeft(yScale).tickFormat('').tickSize(-w);
+        var xAxisGrid = d3
+            .axisTop(xScale)
+            .tickFormat('')
+            .ticks(0)
+            .tickSize(-svgH);
 
-        svg.append('g')
+        var yAxisGrid = d3.axisLeft(yScale).tickFormat('').tickSize(-svgW);
+
+        chart
+            .append('g')
             .attr('id', 'x-axis')
-            .attr('transform', 'translate(0,' + (h + margins.top) + ')')
+            .attr('transform', 'translate(0,' + svgH + ')')
             .call(xAxis);
-        svg.append('g')
-            .attr('id', 'x-axis-top')
-            .attr('transform', 'translate(0,' + margins.top + ')')
-            .call(xAxisGrid);
-        svg.append('g')
-            .attr('id', 'y-axis')
-            .attr('transform', 'translate(' + margins.left + ',0)')
-            .call(yAxis);
-        svg.append('g')
-            .attr('id', 'y-axis-grid')
-            .attr('transform', 'translate(' + margins.left + ',0)')
-            .call(yAxisGrid);
 
+        chart
+            .append('g')
+            .attr('id', 'x-axis-top')
+            .attr('transform', 'translate(0,0)')
+            .call(xAxisGrid);
+
+        chart.append('g').attr('id', 'y-axis').call(yAxis);
+
+        chart.append('g').attr('id', 'y-axis-grid').call(yAxisGrid);
+
+        // ---------------------------------------------------------
         // Add axes labels
         svg.append('text')
             .text('Gross Domestic Product (GDP)')
             .attr('transform', 'rotate(-90)')
-            .attr('x', -(h / 1.5 + margins.top))
+            .attr('x', -(svgH / 1.5 + margins.top))
             .attr('y', margins.left / 3);
         svg.append('text')
             .text('Years')
-            .attr('x', margins.left + w / 2.1)
-            .attr('y', h + 1.9 * margins.top);
+            .attr('x', margins.left + svgW / 2.1)
+            .attr('y', svgH + 1.9 * margins.top);
 
+        // ---------------------------------------------------------
         // Calculate quarters
         var quarters = datesFormat.map((d) =>
             d.getMonth() === 0
@@ -117,6 +133,7 @@ fetch(
         );
         var years = datesFormat.map((d) => d.getFullYear());
 
+        // ---------------------------------------------------------
         // Functions
         function handleMouseover(d, i) {
             let textbox = '';
@@ -125,8 +142,8 @@ fetch(
                 .transition()
                 .duration(0)
                 .style('opacity', '0.7')
-                .style('bottom', '15rem')
-                .style('left', `${margins.left * 2 + i * 2}px`)
+                .style('bottom', '20vw')
+                .style('left', `${margins.left * 2 + i * 1.5}px`)
                 .attr('data-date', dates[i]);
             d3.select('#tooltip').html(
                 quarters[i] +
