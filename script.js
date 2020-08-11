@@ -1,5 +1,7 @@
 const w = 740;
 const h = 400;
+// const w = 340;
+// const h = 600;
 var margins = { right: 40, left: 80, top: 50, bottom: 50 };
 
 const svg = d3
@@ -59,7 +61,7 @@ fetch(
             .attr('y', (d) => yScale(d))
             .attr('width', binLenght)
             .attr('height', (d) => h + margins.top - yScale(d))
-            .attr('fill', '#086972')
+            .attr('fill', '#01a9b4')
             .attr('data-date', (d, i) => dates[i])
             .attr('data-gdp', (d, i) => gdp[i])
             .attr('class', 'bar')
