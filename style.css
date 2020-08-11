@@ -24,7 +24,7 @@ body {
     align-items: center;
     padding: 2rem;
     height: auto;
-    width: 90vw;
+    width: 70vw;
     border-radius: 1rem;
     box-shadow: 4px 4px 10px 5px #dfdfdf;
 }
@@ -56,7 +56,16 @@ g {
 
 /* MEDIA QUERIES */
 
+@media only screen and (max-width: 1024px) {
+    .container {
+        width: 90vw;
+    }
+}
+
 @media only screen and (max-width: 768px) {
+    .container {
+        width: 90vw;
+    }
     #title {
         font-size: 1.5rem;
     }
