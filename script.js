@@ -109,16 +109,16 @@ fetch(
         // ---------------------------------------------------------
         // Add axes labels
         svg.append('text')
-            .attr('class', 'x_axis_label')
-            .text('Gross Domestic Product (GDP)')
+            .attr('id', 'y_axis_label')
+            .text('Gross Domestic Product [billion $]')
             .attr('transform', 'rotate(-90)')
             .attr('x', -(svgH / 1.5 + margins.top))
             .attr('y', margins.left / 3);
         svg.append('text')
-            .attr('class', 'y_axis_label')
+            .attr('id', 'x_axis_label')
             .text('Years')
             .attr('x', margins.left + svgW / 2.1)
-            .attr('y', svgH + 1.9 * margins.top);
+            .attr('y', svgH * 1.22);
 
         // ---------------------------------------------------------
         // Calculate quarters
@@ -138,14 +138,16 @@ fetch(
         // ---------------------------------------------------------
         // Functions
         function handleMouseover(d, i) {
+            console.log(i);
+            console.log(xScale(datesFormat[i]));
             let textbox = '';
             d3.select(this).attr('opacity', '0.5');
             d3.select('#tooltip')
                 .transition()
                 .duration(0)
                 .style('opacity', '0.7')
-                .style('bottom', '20vw')
-                .style('left', `${margins.left * 2 + i * 1.5}px`)
+                .style('top', '35%')
+                .style('left', '20%')
                 .attr('data-date', dates[i]);
             d3.select('#tooltip').html(
                 quarters[i] +

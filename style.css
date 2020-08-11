@@ -47,21 +47,26 @@ g {
     background-color: white;
     border: 0.05rem solid black;
     max-height: 10rem;
-    max-width: 15rem;
+    max-width: 30%;
     padding: 1rem;
-    font-size: 1rem;
+    font-size: 2rem;
     border-radius: 0.5rem;
     text-align: center;
 }
 
 /* MEDIA QUERIES */
 
-@media only screen and (max-width: 900px) {
+@media only screen and (max-width: 768px) {
     #title {
-        font-size: 2rem;
+        font-size: 1.5rem;
     }
-    .x_axis_label,
-    .y_axis_label {
-        font-size: 1rem;
+    #x_axis_label,
+    #y_axis_label {
+        font-size: 1.75rem;
+    }
+    #tooltip {
+        top: 35%;
+        padding: 0.75rem;
+        font-size: 0.75rem;
     }
 }
