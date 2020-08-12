@@ -23,7 +23,7 @@ body {
     justify-content: center;
     align-items: center;
     padding: 2rem;
-    height: auto;
+    height: 80vh;
     width: 70vw;
     border-radius: 1rem;
     box-shadow: 4px 4px 10px 5px #dfdfdf;
