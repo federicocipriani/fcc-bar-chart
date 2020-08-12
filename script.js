@@ -51,13 +51,8 @@ fetch(
             .scaleTime()
             .domain([date_min, date_max_limit])
             .range([0, svgW]);
-        // .range([margins.left, w + margins.left]);
-
-        console.log(xScale(date_min));
-        console.log(xScale(date_max));
 
         var yScale = d3.scaleLinear().domain([0, gdp_max]).range([svgH, 0]);
-        // .range([h + margins.top, margins.top]);
 
         // ---------------------------------------------------------
         // Render the columns
