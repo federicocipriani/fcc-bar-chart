@@ -138,8 +138,6 @@ fetch(
         // ---------------------------------------------------------
         // Functions
         function handleMouseover(d, i) {
-            console.log(i);
-            console.log(xScale(datesFormat[i]));
             let textbox = '';
             d3.select(this).attr('opacity', '0.5');
             d3.select('#tooltip')
